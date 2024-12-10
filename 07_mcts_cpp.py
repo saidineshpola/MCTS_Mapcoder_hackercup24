@@ -38,7 +38,7 @@ def load_unique_tags(filename="unique_tags.json"):
 
 # Load and verify
 loaded_tags = load_unique_tags()
-anthropic_client = AsyncAnthropic(api_key=os.getenv("ANTHROPIC_AI_KEY",""))
+anthropic_client = AsyncAnthropic(api_key=os.getenv("ANTHROPIC_AI_KEY", ""))
 load_dotenv()
 MODEL = "gpt-4o"
 client = None
@@ -820,8 +820,6 @@ class MCTS:
         return await self.generate_code_from_thoughts(thoughts, problem, system_prompt)
 
 
-
-
 async def solve_problem(problem: Problem, on_sample=False) -> dict:
     mctscoder = MCTS(k=4)
     code = await mctscoder.generate_code(
@@ -891,7 +889,6 @@ def match(model_output: str, problem_name: Any):
     return matches
 
 
-
 async def solve_one(problem):
     try:
         model_output = await solve_problem(problem, Args.on_sample)
@@ -929,52 +926,49 @@ class Args(simple_parsing.Serializable):
     folder_path: Path = Path("./round3Data")
     weave_log: bool = False
     weave_eval: bool = False
-    max_num_problems: int = 7
+    max_num_problems: int = 1
     on_sample: bool = False
     use_images: bool = False
     save_output: bool = True
     debug: bool = False
     timeout: int = 80
-    client_type: Literal['anthropic', 'azure_openai', 'openai'] = 'azure_openai'
+    client_type: Literal["anthropic", "azure_openai", "openai"] = "azure_openai"
     model: str = None  # Optional specific model override
+
 
 class AIClientFactory:
     @staticmethod
     def get_client(
-        client_type: Literal['anthropic', 'azure_openai', 'openai'] = 'azure_openai', 
-        model: str = None
+        client_type: Literal["anthropic", "azure_openai", "openai"] = "azure_openai",
+        model: str = None,
     ):
         """
         Factory method to create different AI clients
-        
+
         :param client_type: Type of AI client to create
         :param model: Specific model to use
         :return: Configured AI client
         """
         # Default models for each client
         default_models = {
-            'anthropic': 'claude-3-sonnet-20240229',
-            'azure_openai': 'gpt-4o',
-            'openai': 'gpt-3.5-turbo'
+            "anthropic": "claude-3-sonnet-20240229",
+            "azure_openai": "gpt-4o",
+            "openai": "gpt-3.5-turbo",
         }
-        
+
         # Use provided model or default
-        model = model or default_models.get(client_type, 'gpt-4o')
-        
-        if client_type == 'anthropic':
-            return AsyncAnthropic(
-                api_key=os.getenv("ANTHROPIC_AI_KEY", "")
-            )
-        elif client_type == 'azure_openai':
+        model = model or default_models.get(client_type, "gpt-4o")
+
+        if client_type == "anthropic":
+            return AsyncAnthropic(api_key=os.getenv("ANTHROPIC_AI_KEY", ""))
+        elif client_type == "azure_openai":
             return openai.AsyncAzureOpenAI(
                 api_key=os.getenv("AZURE_OPEN_AI_KEY"),
-                api_version=os.getenv("AZURE_OPEN_AI_KEY"),
-                azure_endpoint=os.getenv("AZURE_OPEN_AI_KEY"),
+                api_version=os.getenv("AZURE_OPEN_AI_VERSION"),
+                azure_endpoint=os.getenv("AZURE_OPEN_AI_ENDPOINT"),
             )
-        elif client_type == 'openai':
-            return openai.AsyncOpenAI(
-                api_key=os.getenv("OPENAI_API_KEY", "")
-            )
+        elif client_type == "openai":
+            return openai.AsyncOpenAI(api_key=os.getenv("OPENAI_API_KEY", ""))
         else:
             raise ValueError(f"Unsupported client type: {client_type}")
 
@@ -984,15 +978,12 @@ async def main():
     setup_logger(args.debug)
     global client
     global MODEL
-    MODEL= args.model
-    client = AIClientFactory.get_client(
-        client_type=args.client_type, 
-        model=args.model
-    )
+    MODEL = args.model
+    client = AIClientFactory.get_client(client_type=args.client_type, model=args.model)
     t0 = time.perf_counter()
 
     problems = Problem.find_all(args.folder_path)[: args.max_num_problems]
-    problems = [problem for problem in problems ] #if problem.name in ["Set, Cover"]]
+    problems = [problem for problem in problems]  # if problem.name in ["Set, Cover"]]
     if args.weave_log:
         weave.init("hack-starter")
 
