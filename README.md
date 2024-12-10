@@ -12,7 +12,7 @@ pip install -r requirements.txt
 ```
 
 ### Environment Setup
-1. Create a `.env` file with your API keys:
+1. Create a `.env` file with your API keys and deployments(for AzureOpenAI):
    ```
    ANTHROPIC_AI_KEY=your_anthropic_api_key
    AZURE_OPEN_AI_KEY=your_azure_openai_key
