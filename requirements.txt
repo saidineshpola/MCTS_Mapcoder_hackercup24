@@ -1,0 +1,8 @@
+simple_parsing
+openai
+weave
+rich
+tabulate
+python-dotenv
+pandas
+anthropic
