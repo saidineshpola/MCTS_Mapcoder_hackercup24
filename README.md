@@ -81,5 +81,11 @@ python 07_mcts_cpp.py --weave_log True
 - Ensure all API keys are correctly set in the `.env` file
 - Verify the problem data folder exists
 - Check internet connectivity and proxy for gateway problems
+  
+## Research Contributions
+
+We extend our sincere gratitude to these research ideas for our Hackercup24 solution
+1. [RethinkMCTS](https://www.arxiv.org/pdf/2409.09584)
+2. [MapCoder](https://arxiv.org/pdf/2405.11403)
 
 
